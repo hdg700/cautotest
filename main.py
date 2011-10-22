@@ -22,6 +22,7 @@ __email__ = 'hdg700@gmail.com'
 import sys
 import getopt
 import os
+from cautotest import *
 
 
 class UsageError(Exception):
@@ -54,10 +55,10 @@ class ArgumentsValidator(object):
             raise InvalidArgs(u'invalid arguments count')
 
         if not os.path.isdir(args[1]):
-            raise InvalidArgs(u'\'code_dir\' is not a valid directory')
+            raise InvalidArgs(u'\'{0}\' is not a valid code directory'.format(args[1]))
 
         if not os.path.isdir(args[2]):
-            raise InvalidArgs(u'\'test_dir\' is not a valid directory')
+            raise InvalidArgs(u'\'{0}\' is not a valid tests directory'.format(args[2]))
 
     def edit(self, args):
         """Validates edit project action"""
@@ -65,10 +66,10 @@ class ArgumentsValidator(object):
             raise InvalidArgs(u'invalid arguments count')
 
         if not os.path.isdir(args[1]):
-            raise InvalidArgs(u'\'code_dir\' is not a valid directory')
+            raise InvalidArgs(u'\'{0}\' is not a valid code directory'.format(args[1]))
 
         if not os.path.isdir(args[2]):
-            raise InvalidArgs(u'\'test_dir\' is not a valid directory')
+            raise InvalidArgs(u'\'{0}\' is not a valid tests directory'.format(args[2]))
 
     def delete(self, args):
         """Validates delete project action"""
@@ -121,6 +122,13 @@ def main(argv=None):
 
         v = ArgumentsValidator()
         v.validate(action, args)
+
+        try:
+            atc = AutotestConsole()
+            atc.do_action(action, args)
+        except ClientException as e:
+            print e.msg
+            print
 
     except UsageError as e:
         if e.help_only:
