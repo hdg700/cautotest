@@ -8,8 +8,8 @@ Manages autotested projects
 Usage: cautotest [opts] [args]
 
 -h, --help                              show this message
--a project_name code_dir tests_dir      add project
--e project_name code_dir tests_dir      edit project
+-a project_name code_dir test_dir       add project
+-e project_name code_dir test_dir       edit project
 -d project_name                         delete project
 -l                                      list projects
 -i project_name                         get project info

@@ -35,24 +35,43 @@ class AutotestConsole(object):
         except AttributeError:
             print action, 'not found'
 
-        except dbus.exceptions.DBusException:
+        except dbus.exceptions.DBusException as e:
+            print e
             raise ClientException('DBus error: autotest daemon doesn\'t provide sush method')
 
-    def add(self, project, code_dir, tests_dir):
-        res = self.daemon.dbus_add(project, code_dir, tests_dir,
-                dbus_interface='hdg700.autotestd.AutotestDaemon.client')
+    def add(self, project, code_dir, test_dir):
+        code_dir = os.path.realpath(code_dir)
+        test_dir = os.path.realpath(test_dir)
 
-    def edit(self, project, code_dir, tests_dir):
-        res = self.daemon.dbus_edit(project, code_dir, tests_dir,
+        res = self.daemon.dbus_add(project, code_dir, test_dir,
                 dbus_interface='hdg700.autotestd.AutotestDaemon.client')
+        print res
+
+    def edit(self, project, code_dir, test_dir):
+        res = self.daemon.dbus_edit(project, code_dir, test_dir,
+                dbus_interface='hdg700.autotestd.AutotestDaemon.client')
+        print res
 
     def delete(self, project):
         res = self.daemon.dbus_delete(project,
                 dbus_interface='hdg700.autotestd.AutotestDaemon.client')
+        if not res:
+            print 'Error deleting project'
+        else:
+            print res
 
     def info(self, project):
         res = self.daemon.dbus_info(project,
                 dbus_interface='hdg700.autotestd.AutotestDaemon.client')
+        print res
 
     def list(self):
         res = self.daemon.dbus_list(dbus_interface='hdg700.autotestd.AutotestDaemon.client')
+        if res:
+            print 'Active projects:'
+            for i in res:
+                print '\t- ' + i[0]
+            print
+        else:
+            print 'No active projects'
+            print
