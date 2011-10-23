@@ -47,8 +47,8 @@ class AutotestConsole(object):
                 dbus_interface='hdg700.autotestd.AutotestDaemon.client')
         print res
 
-    def edit(self, project, code_dir, test_dir):
-        res = self.daemon.dbus_edit(project, code_dir, test_dir,
+    def edit(self, project, name, code_dir, test_dir):
+        res = self.daemon.dbus_edit(project, name, code_dir, test_dir,
                 dbus_interface='hdg700.autotestd.AutotestDaemon.client')
         print res
 
@@ -63,7 +63,17 @@ class AutotestConsole(object):
     def info(self, project):
         res = self.daemon.dbus_info(project,
                 dbus_interface='hdg700.autotestd.AutotestDaemon.client')
-        print res
+
+        if not res:
+            print 'No such project!'
+            return False
+
+        print 'Project:'.rjust(10), res['name']
+        print 'Code dir:'.rjust(10), res['code_dir']
+        print 'Test dir:'.rjust(10), res['test_dir']
+        print 'Classes:'.rjust(10), res['code_count']
+        print 'Tests:'.rjust(10), res['test_count']
+        print
 
     def list(self):
         res = self.daemon.dbus_list(dbus_interface='hdg700.autotestd.AutotestDaemon.client')
@@ -71,6 +81,8 @@ class AutotestConsole(object):
             print 'Active projects:'
             for i in res:
                 print '\t- ' + i[0]
+            print
+            print 'Use \'-i project_name\' for more information'
             print
         else:
             print 'No active projects'

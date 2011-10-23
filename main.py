@@ -7,12 +7,12 @@ Manages autotested projects
 
 Usage: cautotest [opts] [args]
 
--h, --help                              show this message
--a project_name code_dir test_dir       add project
--e project_name code_dir test_dir       edit project
--d project_name                         delete project
--l                                      list projects
--i project_name                         get project info
+-h, --help                                      show this message
+-a project_name code_dir test_dir               add project
+-e project_name new_name code_dir test_dir      edit project
+-d project_name                                 delete project
+-l                                              list projects
+-i project_name                                 get project info
 """
 
 __author__ = 'Danilenko Alexander'
@@ -62,13 +62,13 @@ class ArgumentsValidator(object):
 
     def edit(self, args):
         """Validates edit project action"""
-        if len(args) != 3:
+        if len(args) != 4:
             raise InvalidArgs(u'invalid arguments count')
 
-        if not os.path.isdir(args[1]):
+        if not os.path.isdir(args[2]):
             raise InvalidArgs(u'\'{0}\' is not a valid code directory'.format(args[1]))
 
-        if not os.path.isdir(args[2]):
+        if not os.path.isdir(args[3]):
             raise InvalidArgs(u'\'{0}\' is not a valid tests directory'.format(args[2]))
 
     def delete(self, args):
@@ -103,19 +103,14 @@ def main(argv=None):
                     raise UsageError(help_only=True)
                 elif o in ['-a']:
                     action = 'add'
-                    break
-                elif o in ['-e, --edit']:
+                elif o in ['-e', '--edit']:
                     action = 'edit'
-                    break
                 elif o in ['-d', '--delete']:
                     action = 'delete'
-                    break
                 elif o in ['-i', '--info']:
                     action = 'info'
-                    break
                 elif o in ['-l', '--list']:
                     action = 'list'
-                    break
 
         except getopt.error as e:
             raise UsageError(e)
