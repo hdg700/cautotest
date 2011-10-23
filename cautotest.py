@@ -45,7 +45,10 @@ class AutotestConsole(object):
 
         res = self.daemon.dbus_add(project, code_dir, test_dir,
                 dbus_interface='hdg700.autotestd.AutotestDaemon.client')
-        print res
+        if res:
+            print res
+        else:
+            print 'Error'
 
     def edit(self, project, name, code_dir, test_dir):
         res = self.daemon.dbus_edit(project, name, code_dir, test_dir,
