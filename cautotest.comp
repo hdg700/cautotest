@@ -1,0 +1,24 @@
+# bash completion for cautotest
+
+have cautotest &&
+_cautotest()
+{
+    local cur prev
+
+    COMPREPLY=()
+    _get_comp_words_by_ref cur prev
+
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=( $( compgen -W "$(cautotest -h | awk '/^-/ {print substr($1, 1, 2)}' )" -- "$cur") )
+    else
+        case $prev in
+		    -d|-i|-e)
+		        COMPREPLY=( $( compgen -W "$(cautotest -l | awk '/^[ \t]+-/ {print $2}' )" -- "$cur" ) )
+			    ;;
+		    *)
+			;;
+		esac
+    fi
+
+} &&
+complete -F _cautotest cautotest
